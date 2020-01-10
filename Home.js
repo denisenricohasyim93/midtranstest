@@ -33,7 +33,29 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
   }
-  async pay() {
+  
+  async pay1() {
+    // Create Snap API instance
+    let snap = new midtransClient.Snap({
+      isProduction: false,
+      serverKey: 'SB-Mid-server-Dph6h5SHhlPTrflxEhvjgMDk',
+      clientKey: 'SB-Mid-client-yn8w4QpXkErH4ZkH',
+    });
+
+    let parameter = {
+      transaction_details: {
+        order_id: 'test-transaction-123',
+        gross_amount: 200000,
+      },
+      credit_card: {
+        secure: true,
+      },
+    };
+    await snap.createTransactionRedirectUrl(parameter).then(url => {
+      Actions.push('Checkout',{yuerel : url})
+    });
+  }
+  async pay2() {
     // await Alert.alert('Hai')
     const optionConnect = {
       clientKey: 'SB-Mid-client-yn8w4QpXkErH4ZkH',
@@ -92,27 +114,6 @@ export default class Home extends Component {
       callback,
     );
   }
-  async pay2() {
-    // Create Snap API instance
-    let snap = new midtransClient.Snap({
-      isProduction: false,
-      serverKey: 'SB-Mid-server-Dph6h5SHhlPTrflxEhvjgMDk',
-      clientKey: 'SB-Mid-client-yn8w4QpXkErH4ZkH',
-    });
-
-    let parameter = {
-      transaction_details: {
-        order_id: 'test-transaction-123',
-        gross_amount: 200000,
-      },
-      credit_card: {
-        secure: true,
-      },
-    };
-    await snap.createTransactionRedirectUrl(parameter).then(url => {
-      Actions.push('Checkout',{yuerel : url})
-    });
-  }
   render() {
     return (
       <SafeAreaView>
@@ -129,7 +130,7 @@ export default class Home extends Component {
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>MIDTRANS (I) {"\n"}
                 use midtrans-nodejs-client</Text>
-              <TouchableOpacity onPress={async () => await this.pay2()}>
+              <TouchableOpacity onPress={async () => await this.pay1()}>
                 <Text style={styles.sectionDescription}>CLICK HERE TO PAY (I)</Text>
               </TouchableOpacity>
             </View>
@@ -137,7 +138,7 @@ export default class Home extends Component {
               <Text style={styles.sectionTitle}>MIDTRANS (II) {"\n"}
                 use react-native-midtrans-payment
               </Text>
-              <TouchableOpacity onPress={async () => await this.pay()}>
+              <TouchableOpacity onPress={async () => await this.pay2()}>
                 <Text style={styles.sectionDescription}>CLICK HERE TO PAY (II)</Text>
               </TouchableOpacity>
             </View>
